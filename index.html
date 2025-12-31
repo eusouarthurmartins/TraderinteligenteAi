@@ -1,0 +1,1857 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TRADER INTELIGENTE AI - Análise de Gráficos com Inteligência Artificial. Envie o gráfico. Receba a análise. Tome decisões com inteligência.">
+    <meta name="keywords" content="trading, análise de gráficos, inteligência artificial, crypto, forex, ações">
+    <meta name="author" content="TRADER INTELIGENTE AI">
+    <meta property="og:title" content="TRADER INTELIGENTE AI - Análise de Gráficos com IA">
+    <meta property="og:description" content="Envie o gráfico. Receba a análise. Tome decisões com inteligência.">
+    <meta property="og:type" content="website">
+    <title>TRADER INTELIGENTE AI - Análise de Gráficos com Inteligência Artificial</title>
+    
+    <!-- REFERÊNCIA AO FAVICON: O arquivo deve se chamar 'favicon.ico' -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-dark: #0a0f0a;
+            --secondary-dark: #1a2e1a;
+            --card-bg: #0f1f0f;
+            --accent-green: #00ff41;
+            --accent-green-dark: #00cc33;
+            --neon-green: #00ff88;
+            --text-light: #ffffff;
+            --text-gray: #88cc88;
+            --border-green: rgba(0, 255, 65, 0.3);
+            --red-candle: #ff4757;
+            --green-candle: #00ff88;
+            --navbar-height: 70px;
+            --blinking-red: #ff0000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--primary-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            line-height: 1.6;
+            padding-top: calc(var(--navbar-height) + 60px); /* Espaço extra para o aviso */
+        }
+
+        /* Scrollbar Custom */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--secondary-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-green);
+            border-radius: 5px;
+        }
+
+        /* Skip to main content for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--accent-green);
+            color: var(--primary-dark);
+            padding: 8px;
+            z-index: 100;
+            transition: top 0.3s;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* NOVO: Aviso de Acesso Liberado - Mais discreto e alinhado com o design */
+        .access-notice {
+            background: rgba(0, 255, 65, 0.15);
+            color: var(--accent-green);
+            padding: 0.8rem 1rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+            position: fixed;
+            top: var(--navbar-height);
+            left: 0;
+            right: 0;
+            z-index: 9998;
+            border-bottom: 1px solid var(--border-green);
+            backdrop-filter: blur(10px);
+        }
+
+        .access-notice i {
+            margin-right: 0.5rem;
+            color: var(--accent-green);
+        }
+
+        .access-notice .highlight {
+            color: var(--neon-green);
+            font-weight: 700;
+        }
+
+        /* Navigation - CORREÇÃO DO Z-INDEX E POSICIONAMENTO */
+        .navbar {
+            background: rgba(10, 15, 10, 0.98) !important;
+            backdrop-filter: blur(20px);
+            padding: 0.8rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 9999 !important; /* Aumentado para garantir que fique sempre acima */
+            transition: all 0.3s ease;
+            border-bottom: 1px solid var(--border-green);
+            height: var(--navbar-height);
+        }
+
+        .navbar-brand {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--accent-green) !important;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-link {
+            color: var(--text-light) !important;
+            margin: 0 0.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .nav-link:hover, .nav-link:focus {
+            color: var(--accent-green) !important;
+            outline: none;
+        }
+
+        /* Custom Hamburger Menu */
+        .navbar-toggler {
+            border: none !important;
+            padding: 0.2rem 0.4rem;
+            background: transparent !important;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+        .navbar-toggler:hover, .navbar-toggler:focus {
+            border: none !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+        .navbar-toggler .hamburger-icon {
+            display: block;
+            width: 22px;
+            height: 18px;
+            position: relative;
+            transform: rotate(0deg);
+            transition: 0.3s ease-in-out;
+            cursor: pointer;
+        }
+
+        .navbar-toggler .hamburger-icon span {
+            display: block;
+            position: absolute;
+            height: 2px;
+            width: 100%;
+            background: var(--text-light);
+            border-radius: 2px;
+            opacity: 1;
+            left: 0;
+            transform: rotate(0deg);
+            transition: 0.25s ease-in-out;
+        }
+
+        .navbar-toggler .hamburger-icon span:nth-child(1) {
+            top: 0px;
+        }
+
+        .navbar-toggler .hamburger-icon span:nth-child(2) {
+            top: 7px;
+        }
+
+        .navbar-toggler .hamburger-icon span:nth-child(3) {
+            top: 14px;
+        }
+
+        /* X Icon Animation */
+        .navbar-toggler[aria-expanded="true"] .hamburger-icon span:nth-child(1) {
+            top: 7px;
+            transform: rotate(135deg);
+        }
+
+        .navbar-toggler[aria-expanded="true"] .hamburger-icon span:nth-child(2) {
+            opacity: 0;
+            left: -60px;
+        }
+
+        .navbar-toggler[aria-expanded="true"] .hamburger-icon span:nth-child(3) {
+            top: 7px;
+            transform: rotate(-135deg);
+        }
+
+        /* Remove Bootstrap default toggler icon completely */
+        .navbar-toggler-icon {
+            display: none !important;
+        }
+
+        /* Override any Bootstrap focus styles */
+        .navbar-toggler:focus-visible {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            min-height: calc(100vh - var(--navbar-height) - 60px); /* Ajustado para considerar o aviso */
+            background: linear-gradient(135deg, rgba(10, 15, 10, 0.92), rgba(26, 46, 26, 0.95));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem 1rem 4rem;
+            position: relative;
+            overflow: hidden;
+            margin-top: 0;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(0, 255, 65, 0.03) 49px, rgba(0, 255, 65, 0.03) 50px),
+                repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(0, 255, 65, 0.03) 49px, rgba(0, 255, 65, 0.03) 50px);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 100%;
+            padding: 0 1rem;
+        }
+        
+        /* ESTILO DO LOGO PRINCIPAL */
+        .hero-logo {
+            display: block;
+            margin: 0 auto 1.5rem auto;
+            max-width: 130px;
+            height: auto;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(1.8rem, 7vw, 3.5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--accent-green), var(--neon-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow-green 2s ease-in-out infinite alternate;
+            text-shadow: 0 0 40px rgba(0, 255, 65, 0.3);
+            line-height: 1.1;
+        }
+
+        @keyframes glow-green {
+            from { filter: drop-shadow(0 0 20px rgba(0, 255, 65, 0.5)); }
+            to { filter: drop-shadow(0 0 30px rgba(0, 255, 136, 0.8)); }
+        }
+
+        .hero-content p {
+            font-size: clamp(0.9rem, 4vw, 1.3rem);
+            color: var(--text-gray);
+            margin-bottom: 2rem;
+            font-weight: 300;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Compatibility Warning */
+        .compatibility-warning {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 0.8rem;
+            margin: 1.5rem auto;
+            max-width: 600px;
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        .compatibility-warning .warning-text {
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            color: #ffcccc;
+        }
+
+        .compatibility-warning .warning-text strong {
+            color: #ff6666;
+        }
+
+        /* Blinking Red Button */
+        .compatibility-btn {
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 20px rgba(255, 0, 0, 0.3);
+            text-decoration: none;
+            display: inline-block;
+            animation: blink-red 1.5s infinite;
+        }
+
+        @keyframes blink-red {
+            0% { 
+                background: linear-gradient(135deg, #ff0000, #cc0000);
+                box-shadow: 0 5px 20px rgba(255, 0, 0, 0.3);
+            }
+            50% { 
+                background: linear-gradient(135deg, #ff3333, #ff0000);
+                box-shadow: 0 5px 30px rgba(255, 0, 0, 0.6);
+            }
+            100% { 
+                background: linear-gradient(135deg, #ff0000, #cc0000);
+                box-shadow: 0 5px 20px rgba(255, 0, 0, 0.3);
+            }
+        }
+
+        .compatibility-btn:hover, .compatibility-btn:focus {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.5);
+            outline: none;
+            animation: none;
+            background: linear-gradient(135deg, #ff3333, #ff0000);
+        }
+
+        /* Upload Section */
+        .upload-section {
+            background: linear-gradient(135deg, var(--card-bg), var(--secondary-dark));
+            border-radius: 20px;
+            padding: 1.5rem;
+            max-width: 800px;
+            margin: 2rem auto 0;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--border-green);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .upload-section::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--accent-green), var(--neon-green), var(--accent-green));
+            border-radius: 20px;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.3s ease;
+        }
+
+        .upload-section:hover::before {
+            opacity: 0.3;
+        }
+
+        .upload-area {
+            border: 3px dashed var(--accent-green);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(0, 255, 65, 0.05);
+            position: relative;
+        }
+
+        .upload-area:hover, .upload-area:focus {
+            background: rgba(0, 255, 65, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 65, 0.2);
+            outline: none;
+        }
+
+        .upload-area.dragover {
+            background: rgba(0, 255, 65, 0.2);
+            border-color: var(--neon-green);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
+        }
+
+        .upload-icon {
+            font-size: 2.5rem;
+            color: var(--accent-green);
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .file-error {
+            color: var(--red-candle);
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .analyze-btn {
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-green-dark));
+            color: var(--primary-dark);
+            border: none;
+            padding: 0.8rem 1.8rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+            display: none;
+            box-shadow: 0 5px 20px rgba(0, 255, 65, 0.3);
+        }
+
+        .analyze-btn:hover, .analyze-btn:focus {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 255, 65, 0.5);
+            outline: none;
+        }
+
+        .new-analysis-btn {
+            background: linear-gradient(135deg, var(--neon-green), var(--accent-green));
+            color: var(--primary-dark);
+            border: none;
+            padding: 0.7rem 1.8rem;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .new-analysis-btn:hover, .new-analysis-btn:focus {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.5);
+            outline: none;
+        }
+
+        /* Result Section */
+        .result-section {
+            display: none;
+            background: linear-gradient(135deg, var(--card-bg), var(--secondary-dark));
+            border-radius: 20px;
+            padding: 1.2rem;
+            margin-top: 2rem;
+            border: 2px solid var(--neon-green);
+            animation: slideIn 0.5s ease;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-header {
+            background: linear-gradient(135deg, var(--accent-green), var(--neon-green));
+            color: var(--primary-dark);
+            padding: 0.8rem;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0, 255, 65, 0.3);
+        }
+
+        .result-item {
+            background: rgba(0, 255, 65, 0.1);
+            padding: 0.8rem;
+            margin: 0.8rem 0;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent-green);
+            transition: all 0.3s ease;
+        }
+
+        .result-item:hover {
+            transform: translateX(10px);
+            background: rgba(0, 255, 65, 0.15);
+            box-shadow: 0 5px 20px rgba(0, 255, 65, 0.2);
+        }
+
+        .result-label {
+            color: var(--text-gray);
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .result-value {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--text-light);
+        }
+
+        .direction-badge {
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .direction-buy {
+            background: linear-gradient(135deg, var(--accent-green), var(--neon-green));
+            color: var(--primary-dark);
+            box-shadow: 0 5px 20px rgba(0, 255, 65, 0.4);
+        }
+
+        .direction-sell {
+            background: linear-gradient(135deg, #ff4757, #ff3838);
+            color: white;
+            box-shadow: 0 5px 20px rgba(255, 71, 87, 0.4);
+        }
+
+        /* Sections */
+        .section {
+            padding: 3rem 1rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            color: var(--accent-green);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* How to Use Section */
+        .how-to-card {
+            background: linear-gradient(135deg, var(--card-bg), var(--secondary-dark));
+            border-radius: 15px;
+            padding: 1.3rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            height: 100%;
+            border: 1px solid var(--border-green);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .how-to-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .how-to-card:hover::before {
+            left: 100%;
+        }
+
+        .how-to-card:hover, .how-to-card:focus {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 255, 65, 0.3);
+            border-color: var(--accent-green);
+            outline: none;
+        }
+
+        .step-icon {
+            font-size: 2.2rem;
+            color: var(--accent-green);
+            margin-bottom: 1rem;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, var(--accent-green), var(--neon-green));
+            color: var(--primary-dark);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 auto 1rem;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 20px rgba(0, 255, 65, 0.3);
+        }
+
+        /* CTA Buttons */
+        .cta-button {
+            display: inline-block;
+            padding: 0.8rem 1.8rem;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-green-dark));
+            color: var(--primary-dark);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            text-align: center;
+            margin: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 20px rgba(0, 255, 65, 0.3);
+        }
+
+        .cta-button:hover, .cta-button:focus {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 255, 65, 0.5);
+            color: var(--primary-dark);
+            outline: none;
+        }
+
+        /* Warning */
+        .warning-box {
+            background: rgba(0, 255, 65, 0.1);
+            border: 1px solid var(--border-green);
+            border-radius: 10px;
+            padding: 1.2rem;
+            margin: 2rem 1rem;
+            max-width: none;
+            text-align: center;
+            color: var(--text-gray);
+        }
+
+        .warning-box i {
+            color: var(--accent-green);
+            margin-right: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* Loading Animation */
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 255, 65, 0.3);
+            border-top: 4px solid var(--accent-green);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Chart Preview */
+        .chart-preview {
+            max-width: 100%;
+            border-radius: 10px;
+            margin: 1rem 0;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--border-green);
+        }
+
+        /* Features Section with Chart Pattern */
+        .features-section {
+            background: var(--secondary-dark);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .features-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(0, 255, 65, 0.01) 35px, rgba(0, 255, 65, 0.01) 70px);
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, var(--card-bg), var(--secondary-dark));
+            border-radius: 15px;
+            padding: 1.3rem;
+            height: 100%;
+            border: 1px solid var(--border-green);
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-card:hover, .feature-card:focus {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 255, 65, 0.3);
+            border-color: var(--accent-green);
+            outline: none;
+        }
+
+        .feature-icon {
+            font-size: 2.2rem;
+            color: var(--accent-green);
+            margin-bottom: 1rem;
+        }
+
+        /* Create Account Section with Binary Options Theme */
+        .create-account-section {
+            background: linear-gradient(135deg, rgba(10, 15, 10, 0.95), rgba(26, 46, 26, 0.98));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .create-account-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 65, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(255, 71, 87, 0.05) 0%, transparent 50%),
+                repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(0, 255, 65, 0.02) 49px, rgba(0, 255, 65, 0.02) 50px);
+        }
+
+        .create-account-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Toast Notification */
+        .toast-container {
+            position: fixed;
+            top: 90px;
+            right: 10px;
+            left: 10px;
+            z-index: 10000;
+        }
+
+        .toast {
+            background: var(--card-bg);
+            border: 1px solid var(--border-green);
+            color: var(--text-light);
+            border-radius: 10px;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            min-width: auto;
+            animation: slideInRight 0.3s ease;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast-success {
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .toast-error {
+            border-left: 4px solid var(--red-candle);
+        }
+
+        .toast i {
+            font-size: 1.3rem;
+            margin-right: 0.8rem;
+        }
+
+        .toast-success i {
+            color: var(--accent-green);
+        }
+
+        .toast-error i {
+            color: var(--red-candle);
+        }
+
+        /* Responsive - MELHORIAS ADICIONAIS */
+        @media (max-width: 768px) {
+            :root {
+                --navbar-height: 65px;
+            }
+            
+            body {
+                padding-top: calc(var(--navbar-height) + 50px); /* Ajustado para mobile */
+            }
+            
+            .navbar {
+                height: var(--navbar-height);
+                padding: 0.5rem 0;
+            }
+            
+            .navbar-brand {
+                font-size: 1.1rem;
+            }
+            
+            .nav-link {
+                margin: 0 0.3rem;
+                font-size: 0.85rem;
+                padding: 0.3rem 0;
+            }
+
+            .hero-section {
+                min-height: calc(100vh - var(--navbar-height) - 50px); /* Ajustado para mobile */
+            }
+
+            .hero-content h1 {
+                font-size: clamp(1.6rem, 8vw, 2.5rem);
+                line-height: 1.1;
+                margin-bottom: 1rem;
+            }
+            
+            .hero-content p {
+                font-size: clamp(0.85rem, 4vw, 1.1rem);
+                margin-bottom: 1.5rem;
+            }
+            
+            .compatibility-warning {
+                margin: 1rem auto;
+                padding: 0.7rem;
+            }
+            
+            .compatibility-warning .warning-text {
+                font-size: 0.85rem;
+            }
+            
+            .compatibility-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+            
+            .upload-section {
+                padding: 1.2rem;
+                margin-top: 1.5rem;
+            }
+            
+            .upload-area {
+                padding: 1.2rem;
+            }
+            
+            .upload-icon {
+                font-size: 2.2rem;
+            }
+            
+            .section {
+                padding: 2.5rem 1rem;
+            }
+            
+            .section-title {
+                font-size: 1.6rem;
+                margin-bottom: 2rem;
+            }
+
+            /* NOVO: Responsividade para o aviso de acesso */
+            .access-notice {
+                font-size: 0.85rem;
+                padding: 0.6rem 0.8rem;
+            }
+        }
+        
+        /* Extra small devices */
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 1.5rem;
+            }
+            
+            .hero-content p {
+                font-size: 0.95rem;
+            }
+            
+            .compatibility-warning .warning-text {
+                font-size: 0.8rem;
+            }
+            
+            .compatibility-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.75rem;
+            }
+            
+            .upload-section {
+                padding: 1rem;
+                margin-top: 1rem;
+            }
+            
+            .upload-area {
+                padding: 1rem;
+            }
+            
+            .upload-icon {
+                font-size: 2rem;
+            }
+            
+            .result-header {
+                font-size: 0.95rem;
+            }
+            
+            .result-value {
+                font-size: 0.95rem;
+            }
+            
+            .direction-badge {
+                font-size: 0.8rem;
+                padding: 0.3rem 0.8rem;
+            }
+
+            /* NOVO: Responsividade para o aviso de acesso */
+            .access-notice {
+                font-size: 0.8rem;
+                padding: 0.5rem 0.7rem;
+            }
+
+            .access-notice i {
+                margin-right: 0.3rem;
+            }
+        }
+
+        /* =================================== */
+        /* ESTILOS DA SEÇÃO VERSÃO PRÓ */
+        /* =================================== */
+        .pro-version-section {
+            background: var(--secondary-dark);
+            position: relative;
+            overflow: hidden;
+            padding: 4rem 1rem;
+        }
+
+        .pro-version-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(0, 255, 65, 0.01) 35px, rgba(0, 255, 65, 0.01) 70px);
+        }
+
+        .pro-offer-container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .pro-features {
+            flex: 1;
+            min-width: 300px;
+            color: var(--text-light);
+        }
+
+        /* ESTILO PARA O LOGO PRÓ */
+        .pro-logo {
+            display: block;
+            margin: 0 auto 2rem auto;
+            max-width: 200px;
+            width: 100%;
+            height: auto;
+        }
+
+        /* TÍTULO PULSANTE E MAIOR */
+        #pro-title {
+            font-size: 2.5rem; /* Maior */
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--neon-green), var(--accent-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse-text 1.5s infinite;
+            text-shadow: 0 0 30px rgba(0, 255, 136, 0.7);
+        }
+
+        /* ANIMAÇÃO DE PULSAÇÃO PARA TEXTOS */
+        @keyframes pulse-text {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.9; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* REESTRUTURAÇÃO DOS TÓPICOS */
+        .pro-feature-item {
+            margin-bottom: 2rem;
+        }
+
+        .pro-feature-item h4 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .pro-feature-item h4 i {
+            margin-right: 1rem;
+            font-size: 1.5rem;
+            min-width: 30px;
+        }
+
+        .pro-feature-item p {
+            font-size: 1rem;
+            color: var(--text-gray);
+            line-height: 1.7;
+            padding-left: 2.5rem; /* Alinha com o texto do título */
+        }
+
+        .broker-warning-pro {
+            background: rgba(255, 193, 7, 0.1); /* Amarelo para destacar */
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            color: #ffc107;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .broker-warning-pro i {
+            margin-right: 0.8rem;
+            font-size: 1.2rem;
+        }
+
+        .pricing-card {
+            background: linear-gradient(135deg, var(--card-bg), var(--secondary-dark));
+            border: 2px solid var(--border-green);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+            max-width: 350px;
+            width: 100%;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 255, 65, 0.3);
+            border-color: var(--accent-green);
+        }
+
+        /* TEXTO DE OFERTA PULSANTE EM VERMELHO */
+        .offer-warning-text {
+            color: var(--red-candle);
+            font-weight: 900;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+            animation: pulse-text 1.5s infinite;
+        }
+
+        .price-strikethrough {
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            text-decoration: line-through;
+            margin-bottom: 0.5rem;
+        }
+
+        .price-current {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--accent-green);
+            margin-bottom: 2rem; /* Aumentado o espaço após a remoção do contador */
+            text-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+        }
+        
+        .pro-cta-btn {
+            background: linear-gradient(135deg, var(--accent-green), var(--neon-green));
+            color: var(--primary-dark);
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 900;
+            border-radius: 50px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 30px rgba(0, 255, 65, 0.4);
+        }
+
+        .pro-cta-btn:hover, .pro-cta-btn:focus {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 255, 65, 0.6);
+            color: var(--primary-dark);
+            text-decoration: none;
+            outline: none;
+        }
+        
+        @media (max-width: 768px) {
+            .pro-offer-container {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            #pro-title {
+                font-size: 2rem;
+            }
+            .pricing-card {
+                padding: 1.5rem;
+            }
+            .price-current {
+                font-size: 2.5rem;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg" role="navigation" aria-label="Menu principal">
+        <div class="container">
+            <a class="navbar-brand" href="#home" aria-label="TRADER INTELIGENTE AI - Início">
+                <i class="fas fa-chart-line" aria-hidden="true"></i> TRADER INTELIGENTE AI
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Alternar menu de navegação">
+                <div class="hamburger-icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#how-to-use">Como Usar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Recursos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#pro-version">Versão Pró</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#create-account">Corretora Compatível</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- NOVO: Aviso de Acesso Liberado - Mais discreto e alinhado com o design -->
+    <div class="access-notice" role="alert">
+        <i class="fas fa-info-circle"></i>
+        <span>Ferramenta 100% Gratuita</span>
+    </div>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section id="home" class="hero-section" aria-labelledby="hero-title">
+            <div class="container">
+                <div class="hero-content">
+                    <img src="logo.png" alt="Logo TRADER INTELIGENTE AI" class="hero-logo">
+                    
+                    <h1 id="hero-title">TRADER INTELIGENTE AI</h1>
+                    <p>Envie o gráfico. Receba a análise. Tome decisões com inteligência.</p>
+                    
+                    <!-- Compatibility Warning -->
+                    <div class="compatibility-warning">
+                        <div class="warning-text">
+                            <strong>ATENÇÃO:</strong> Esta ferramenta foi desenvolvida para funcionar apenas em corretoras que utilizam a tecnologia Quadcode. Crie sua conta aqui.
+                        </div>
+                        <a href="https://trade.obynexbroker.com/register?aff=757282&amp;aff_model=revenue&amp;afftrack=" class="compatibility-btn" target="_blank" rel="noopener noreferrer" aria-label="Criar conta na corretora compatível">
+                            CRIAR CONTA NA CORRETORA COMPATIVEL
+                        </a>
+                    </div>
+                    
+                    <!-- Upload Section -->
+                    <div class="upload-section">
+                        <div class="upload-area" id="uploadArea" role="button" tabindex="0" aria-label="Área de upload de gráficos">
+                            <i class="fas fa-cloud-upload-alt upload-icon" aria-hidden="true"></i>
+                            <h3>Envie seu Gráfico</h3>
+                            <p class="text-muted">Arraste e solte ou clique para selecionar</p>
+                            <p class="text-muted small">Formatos: JPG, PNG, GIF (Máx: 10MB)</p>
+                            <input type="file" id="fileInput" accept="image/*" aria-label="Selecionar arquivo de imagem">
+                        </div>
+                        
+                        <div class="file-error" id="fileError" role="alert"></div>
+                        
+                        <img id="chartPreview" class="chart-preview" alt="Preview do gráfico">
+                        
+                        <button class="analyze-btn" id="analyzeBtn" aria-label="Analisar gráfico com inteligência artificial">
+                            <i class="fas fa-brain" aria-hidden="true"></i> Analisar com IA
+                        </button>
+                        
+                        <div class="loading-spinner" id="loadingSpinner" aria-live="polite">
+                            <div class="spinner" role="status" aria-label="Carregando"></div>
+                            <p class="mt-3">Analisando gráfico...</p>
+                        </div>
+                        
+                        <!-- Result Section -->
+                        <div class="result-section" id="resultSection" aria-labelledby="result-title">
+                            <h2 id="result-title" class="result-header">RESULTADO DA ANÁLISE</h2>
+                            
+                            <div class="result-item">
+                                <div class="result-label">Direção da Operação</div>
+                                <div class="result-value">
+                                    <span class="direction-badge" id="directionBadge">COMPRA</span>
+                                </div>
+                            </div>
+                            
+                            <div class="result-item">
+                                <div class="result-label">Ativo Analisado</div>
+                                <div class="result-value" id="assetName">BTC/USDT</div>
+                            </div>
+                            
+                            <div class="result-item">
+                                <div class="result-label">Horário Exato da Entrada</div>
+                                <div class="result-value" id="entryTime">--:--:--</div>
+                            </div>
+                            
+                            <div class="result-item">
+                                <div class="result-label">Tempo de Expiração</div>
+                                <div class="result-value" id="expiryTime">5 minutos</div>
+                            </div>
+                            
+                            <div class="result-item">
+                                <div class="result-label">Resumo Final da Estratégia</div>
+                                <div class="result-value" id="strategySummary">
+                                    Análise técnica identificou padrão de alta com confirmação em volume.
+                                </div>
+                            </div>
+                            
+                            <button class="new-analysis-btn" id="newAnalysisBtn" aria-label="Fazer nova análise">
+                                <i class="fas fa-redo" aria-hidden="true"></i> Fazer Nova Análise
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How to Use Section -->
+        <section id="how-to-use" class="section" aria-labelledby="how-to-title">
+            <div class="container">
+                <h2 id="how-to-title" class="section-title">Como Usar</h2>
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="how-to-card" tabindex="0">
+                            <div class="step-number">1</div>
+                            <i class="fas fa-image step-icon" aria-hidden="true"></i>
+                            <h4>Envie a Foto</h4>
+                            <p>Tire um print ou foto do gráfico que deseja analisar e envie para nossa IA.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="how-to-card" tabindex="0">
+                            <div class="step-number">2</div>
+                            <i class="fas fa-brain step-icon" aria-hidden="true"></i>
+                            <h4>IA Analisa</h4>
+                            <p>Nossa inteligência artificial analisa tendências, suportes, resistências e padrões.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="how-to-card" tabindex="0">
+                            <div class="step-number">3</div>
+                            <i class="fas fa-chart-line step-icon" aria-hidden="true"></i>
+                            <h4>Receba a Análise</h4>
+                            <p>Obtenha direção, e resumo estratégico detalhado.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="section features-section" aria-labelledby="features-title">
+            <div class="container">
+                <h2 id="features-title" class="section-title">Recursos da IA</h2>
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="feature-card" tabindex="0">
+                            <i class="fas fa-chart-area feature-icon" aria-hidden="true"></i>
+                            <h4>Análise de Tendência</h4>
+                            <p>Identificação precisa de tendências de alta e baixa com algoritmos avançados.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="feature-card" tabindex="0">
+                            <i class="fas fa-layer-group feature-icon" aria-hidden="true"></i>
+                            <h4>Suportes e Resistências</h4>
+                            <p>Detecção automática de níveis chave de suporte e resistência no gráfico.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="feature-card" tabindex="0">
+                            <i class="fas fa-shapes feature-icon" aria-hidden="true"></i>
+                            <h4>Padrões Gráficos</h4>
+                            <p>Reconhecimento de padrões clássicos como topo duplo, fundo duplo, triângulos.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="feature-card" tabindex="0">
+                            <i class="fas fa-tachometer-alt feature-icon" aria-hidden="true"></i>
+                            <h4>Análise de Volume</h4>
+                            <p>Interpretação do volume para confirmar movimentos e identificar reversões.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="feature-card" tabindex="0">
+                            <i class="fas fa-clock feature-icon" aria-hidden="true"></i>
+                            <h4>Timing Preciso</h4>
+                            <p>Tecnologia analítica que interpreta o tempo do mercado com precisão, entregando <strong data-start="1216" data-end="1238">contexto e clareza</strong> para decisões mais conscientes.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="feature-card" tabindex="0">
+                            <i class="fas fa-robot feature-icon" aria-hidden="true"></i>
+                            <h4>IA Aprendizagem</h4>
+                            <p>Nossa IA aprende continuamente, melhorando a precisão das análises.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================== -->
+        <!-- NOVA SEÇÃO VERSÃO PRÓ -->
+        <!-- =================================== -->
+        <section id="pro-version" class="section pro-version-section" aria-labelledby="pro-title">
+            <div class="container">
+                <!-- IMAGEM ADICIONADA AQUI -->
+                <img src="logopro.png" alt="Logo Versão Pró" class="pro-logo">
+                
+                <h2 id="pro-title" class="section-title">VERSÃO PRÓ</h2>
+                <div class="pro-offer-container">
+                    <div class="pro-features">
+                        <h3>Eleve Suas Operações ao Nível Profissional</h3>
+                        
+                        <div class="pro-feature-item">
+                            <h4><i class="fas fa-signal"></i> Sinais Claros de Compra e Venda</h4>
+                            <p>Receba sinais direto dentro da plataforma da corretora. Não perca tempo analisando, a IA faz tudo para você.</p>
+                        </div>
+
+                        <div class="pro-feature-item">
+                            <h4><i class="fas fa-robot"></i> Análise 100% Automática</h4>
+                            <p>A Versão Pró se integra à sua conta na corretora e realiza todas as análises em tempo real, identificando as melhores oportunidades.</p>
+                        </div>
+
+                        <div class="pro-feature-item">
+                            <h4><i class="fas fa-map-marked-alt"></i> Um Mapa para o Dinheiro</h4>
+                            <p>Tenha um guia visual claro e preciso na palma da sua mão, apontando exatamente quando e onde operar para maximizar seus resultados.</p>
+                        </div>
+
+                        <div class="broker-warning-pro">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div>
+                                <strong>Requisito Essencial:</strong> Para o sistema da IA Versão Pró rodar 100%, a corretora <strong>precisa ser da tecnologia Quadcode</strong>. Crie sua conta na corretora compatível para ativar o acesso.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pricing-card">
+                        <p class="offer-warning-text">OFERTA POR TEMPO LIMITADO</p>
+                        <div class="price-strikethrough">De R$ 897,00</div>
+                        <div class="price-current">Por apenas R$ 197,00</div>
+                        
+                        <!-- BOTÃO MODIFICADO PARA WHATSAPP -->
+                        <a href="https://wa.me/5522997301385?text=Quero%20a%20vers%C3%A3o%20Pr%C3%B3." class="pro-cta-btn" target="_blank" rel="noopener noreferrer" aria-label="Conversar no WhatsApp sobre a Versão Pró">
+                            QUERO A VERSÃO PRÓ AGORA!
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Create Account Section -->
+        <section id="create-account" class="section create-account-section" aria-labelledby="create-account-title">
+            <div class="container create-account-content text-center">
+                <h2 id="create-account-title" class="section-title">Criar Conta na Corretora</h2>
+                <p class="lead mb-4">
+                    Para começar a operar, você precisa de uma conta em uma corretora confiável. 
+                    Nossa plataforma parceira oferece segurança, velocidade e as melhores condições do mercado.
+                </p>
+                <a href="https://trade.obynexbroker.com/register?aff=757282&amp;aff_model=revenue&amp;afftrack=" class="cta-button" target="_blank" rel="noopener noreferrer" aria-label="Criar conta na corretora parceira">
+                    &nbsp;CRIAR CONTA NA CORRETORA
+                </a>
+                <div class="mt-4">
+                    <p class="text-muted">
+                        <i class="fas fa-shield-alt" aria-hidden="true"></i> 100% Seguro | 
+                        <i class="fas fa-bolt" aria-hidden="true"></i> Depósitos Rápidos | 
+                        <i class="fas fa-headset" aria-hidden="true"></i> Suporte 24/7
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Warning -->
+    <div class="warning-box" role="alert" id="warningBox">
+        <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+        As análises são baseadas em leitura técnica de gráficos e não garantem resultados. 
+        Opere com responsabilidade e nunca arrisque mais do que pode perder.
+    </div>
+
+    <!-- Footer -->
+    <footer class="section text-center" style="background: var(--primary-dark); padding: 2rem;" id="footer">
+        <div class="container">
+            <p>© 2024 TRADER INTELIGENTE AI. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Setup mobile menu auto-close
+            setupMobileMenu();
+            
+            // Setup navigation for all sections
+            setupNavigation();
+            
+            // Initialize main content functionality
+            initializeMainContent();
+        });
+
+        // Setup navigation for all sections
+        function setupNavigation() {
+            // Get all navigation links
+            const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    
+                    // Handle other sections navigation
+                    const targetSection = document.querySelector(targetId);
+                    if (targetSection) {
+                        // Smooth scroll to section
+                        const navbarHeight = document.querySelector('.navbar').offsetHeight;
+                        const targetPosition = targetSection.offsetTop - navbarHeight - 20;
+                        
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        }
+
+        // Setup mobile menu auto-close
+        function setupMobileMenu() {
+            // Close mobile menu when clicking on nav links
+            const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+            const navbarCollapse = document.querySelector('.navbar-collapse');
+            const navbarToggler = document.querySelector('.navbar-toggler');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    // Check if menu is open (for mobile)
+                    if (window.innerWidth < 992 && navbarCollapse.classList.contains('show')) {
+                        // Close the menu
+                        const bsCollapse = new bootstrap.Collapse(navbarCollapse, {
+                            toggle: false
+                        });
+                        bsCollapse.hide();
+                        
+                        // Reset hamburger icon
+                        navbarToggler.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            });
+        }
+
+        // Initialize main content functionality
+        function initializeMainContent() {
+            // Upload functionality
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const chartPreview = document.getElementById('chartPreview');
+            const resultSection = document.getElementById('resultSection');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const newAnalysisBtn = document.getElementById('newAnalysisBtn');
+            const fileError = document.getElementById('fileError');
+
+            // Make upload area focusable for keyboard navigation
+            uploadArea.addEventListener('click', () => fileInput.click());
+
+            // Keyboard navigation for upload area
+            uploadArea.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    fileInput.click();
+                }
+            });
+
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFile(files[0]);
+                }
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleFile(e.target.files[0]);
+                }
+            });
+
+            function handleFile(file) {
+                // Reset error message
+                fileError.style.display = 'none';
+                fileError.textContent = '';
+                
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    fileError.textContent = 'Por favor, envie apenas arquivos de imagem (JPG, PNG, GIF).';
+                    fileError.style.display = 'block';
+                    return;
+                }
+                
+                // Validate file size (10MB max)
+                const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+                if (file.size > maxSize) {
+                    fileError.textContent = 'O arquivo é muito grande. Por favor, envie uma imagem de até 10MB.';
+                    fileError.style.display = 'block';
+                    return;
+                }
+                
+                // Process valid file
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    chartPreview.src = e.target.result;
+                    chartPreview.style.display = 'block';
+                    chartPreview.alt = `Preview do gráfico: ${file.name}`;
+                    analyzeBtn.style.display = 'inline-block';
+                    uploadArea.style.display = 'none';
+                    resultSection.style.display = 'none';
+                    showToast('Imagem carregada com sucesso!', 'success');
+                };
+                
+                reader.onerror = () => {
+                    fileError.textContent = 'Ocorreu um erro ao carregar a imagem. Tente novamente.';
+                    fileError.style.display = 'block';
+                };
+                
+                reader.readAsDataURL(file);
+            }
+
+            analyzeBtn.addEventListener('click', () => {
+                loadingSpinner.style.display = 'block';
+                analyzeBtn.style.display = 'none';
+                
+                // Simulate AI analysis
+                setTimeout(() => {
+                    loadingSpinner.style.display = 'none';
+                    generateAnalysis();
+                    resultSection.style.display = 'block';
+                    showToast('Análise concluída com sucesso!', 'success');
+                    
+                    // Scroll to result
+                    resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 3000);
+            });
+
+            // New Analysis Button - Reset everything
+            newAnalysisBtn.addEventListener('click', () => {
+                // Reset all states
+                chartPreview.style.display = 'none';
+                chartPreview.src = '';
+                chartPreview.alt = '';
+                analyzeBtn.style.display = 'none';
+                resultSection.style.display = 'none';
+                uploadArea.style.display = 'block';
+                fileInput.value = '';
+                fileError.style.display = 'none';
+                
+                // Scroll back to upload area
+                uploadArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+
+            // === BLOCO EDITADO CONFORME REGRAS ===
+            function generateAnalysis() {
+                // Geração de análise educacional simulada (substituindo sinais)
+                const overviewTexts = [
+                    "O gráfico apresentado exibe um cenário de mercado com movimentos bem definidos, permitindo uma análise clara da estrutura de preços recente.",
+                    "Analisando a imagem, observamos um contexto onde o preço testou níveis importantes recentemente, indicando uma possível definição de curto prazo.",
+                    "A visão geral do gráfico sugere um momento de decisão, com o preço se encontrando em uma região chave que pode determinar o próximo movimento."
+                ];
+
+                const trendTexts = [
+                    "O mercado está em uma clara tendência de alta, caracterizada pela formação de topos e fundos ascendentes. Cada nova alta supera a anterior, e cada nova baixa é maior que a anterior, indicando força compradora.",
+                    "A estrutura de preços indica uma tendência de baixa, com topos e fundos descendentes. A pressão vendedora se mostra consistente, com o preço encontrando dificuldades em realizar altas significativas.",
+                    "O mercado está em um período de lateralização, também conhecido como consolidação. O preço oscila entre uma zona de suporte e uma de resistência, sem uma direção definida, aguardando um rompimento."
+                ];
+
+                const structureTexts = [
+                    "A formação dos candles recentes mostra corpos com forte direcionalidade, indicando convicção por parte dos compradores. A ausência de sombras longas sugere que a força está mantendo o controle.",
+                    "Observamos candles com corpos pequenos e sombras longas tanto para cima quanto para baixo, o que caracteriza indecisão. Isso pode indicar um esgotamento da força atual e uma possível pausa ou reversão.",
+                    "A estrutura de mercado revela um enfraquecimento da tendência atual. As altas estão se tornando menos acentuadas e o volume está diminuindo, sinalizando que a força pode estar mudando de lado."
+                ];
+
+                const supportResistanceTexts = [
+                    "A zona de suporte mais relevante está na região onde o preço tocou e reverteu a alta por três vezes nos últimos períodos. Esta área funciona como um 'piso', onde a força compradora tende a entrar.",
+                    "A resistência principal é claramente visível na região de um topo histórico anterior. O preço testou este nível e foi rejeitado, mostrando que a força vendedora está presente e ativa nesta zona.",
+                    "Temos uma zona de confluência entre uma média móvel importante e um nível de suporte anterior. Esta região é particularmente forte porque múltiplas ferramentas apontam para sua importância."
+                ];
+
+                const pullbackTexts = [
+                    "Sim, o preço está executando um pullback. Após uma forte alta, o preço está corrigindo em direção a uma média móvel ou a uma zona de suporte anterior. Este é um comportamento comum e saudável dentro de uma tendência de alta.",
+                    "Não há um pullback claro no momento. O preço está em um movimento de aceleração, distante de suas médias móveis, o que indica uma forte convicção direcional, mas também um risco de esgotamento.",
+                    "O movimento atual se assemelha a um pullback dentro de uma tendência de baixa. O preço sobe temporariamente, testando uma resistência que antes era suporte, antes de provavelmente retomar a queda."
+                ];
+
+                const complementaryTexts = [
+                    "Visualmente, identificamos um padrão de 'triângulo ascendente' se formando, que é classicamente um padrão de continuação de alta. A quebra da resistência do triângulo poderia confirmar o movimento.",
+                    "O comportamento dos candles sugere uma luta ativa entre compradores e vendedores. A presença de um 'doji' após uma longa sequência de baixa pode ser um sinal de esgotamento da pressão vendedora.",
+                    "A análise complementar aponta para uma possível consolidação. O preço está contido dentro de um canal, e a melhor estratégia seria aguardar um rompimento claro desse canal para definir o cenário."
+                ];
+
+                const conclusionTexts = [
+                    "Em resumo, o cenário atual é de uma tendência de alta em pausa, com o preço em uma região de correção. A análise é estritamente educacional, visando ensinar a interpretação gráfica, e não constitui uma recomendação financeira.",
+                    "O contexto do gráfico é de lateralização, com o preço buscando uma definição. Este é um momento de observação, e a análise serve para entender as forças em jogo, sem sugerir qualquer tipo de operação.",
+                    "A conclusão é de um mercado com força vendedora, mas com sinais de possível esgotamento no curto prazo. É fundamental lembrar que esta análise tem fins didáticos e não deve ser usada como base para decisões de investimento."
+                ];
+
+                // Seleciona uma análise aleatória de cada categoria
+                const selectedOverview = overviewTexts[Math.floor(Math.random() * overviewTexts.length)];
+                const selectedTrend = trendTexts[Math.floor(Math.random() * trendTexts.length)];
+                const selectedStructure = structureTexts[Math.floor(Math.random() * structureTexts.length)];
+                const selectedSR = supportResistanceTexts[Math.floor(Math.random() * supportResistanceTexts.length)];
+                const selectedPullback = pullbackTexts[Math.floor(Math.random() * pullbackTexts.length)];
+                const selectedComplementary = complementaryTexts[Math.floor(Math.random() * complementaryTexts.length)];
+                const selectedConclusion = conclusionTexts[Math.floor(Math.random() * conclusionTexts.length)];
+                
+                // Atualiza o HTML com a nova análise educacional
+                const resultSection = document.getElementById('resultSection');
+                resultSection.innerHTML = `
+                    <h2 class="result-header">ANÁLISE TÉCNICA EDUCACIONAL</h2>
+                    
+                    <div class="result-item">
+                        <div class="result-label">1️⃣ Visão Geral do Gráfico</div>
+                        <div class="result-value">${selectedOverview}</div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">2️⃣ Tendência do Mercado</div>
+                        <div class="result-value">${selectedTrend}</div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">3️⃣ Estrutura de Mercado</div>
+                        <div class="result-value">${selectedStructure}</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-label">4️⃣ Zonas de Suporte e Resistência</div>
+                        <div class="result-value">${selectedSR}</div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">5️⃣ Região de Pullback (se houver)</div>
+                        <div class="result-value">${selectedPullback}</div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">6️⃣ Análise Técnica Complementar</div>
+                        <div class="result-value">${selectedComplementary}</div>
+                    </div>
+
+                    <div class="result-item" style="border-left: 4px solid var(--text-gray); background: rgba(136, 204, 136, 0.1);">
+                        <div class="result-label">7️⃣ Conclusão Educacional</div>
+                        <div class="result-value">${selectedConclusion}</div>
+                    </div>
+                    
+                    <button class="new-analysis-btn" id="newAnalysisBtn" aria-label="Fazer nova análise">
+                        <i class="fas fa-redo" aria-hidden="true"></i> Fazer Nova Análise
+                    </button>
+                `;
+                
+                // Re-adiciona o event listener para o novo botão que foi criado
+                document.getElementById('newAnalysisBtn').addEventListener('click', () => {
+                    // Reset all states
+                    chartPreview.style.display = 'none';
+                    chartPreview.src = '';
+                    chartPreview.alt = '';
+                    analyzeBtn.style.display = 'none';
+                    resultSection.style.display = 'none';
+                    uploadArea.style.display = 'block';
+                    fileInput.value = '';
+                    fileError.style.display = 'none';
+                    
+                    // Scroll back to upload area
+                    uploadArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                });
+            }
+            // === FIM DO BLOCO EDITADO ===
+
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        const navbarHeight = document.querySelector('.navbar').offsetHeight;
+                        const targetPosition = target.offsetTop - navbarHeight - 20; // 20px extra spacing
+                        
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Navbar background on scroll
+            window.addEventListener('scroll', () => {
+                const navbar = document.querySelector('.navbar');
+                if (window.scrollY > 50) {
+                    navbar.style.background = 'rgba(10, 15, 10, 0.98)';
+                } else {
+                    navbar.style.background = 'rgba(10, 15, 10, 0.95)';
+                }
+            });
+
+            // Add animation on scroll
+            const scrollObserverOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -100px 0px'
+            };
+
+            const scrollObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, scrollObserverOptions);
+
+            document.querySelectorAll('.how-to-card, .feature-card').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'all 0.6s ease';
+                scrollObserver.observe(el);
+            });
+
+            // Keyboard navigation for cards
+            document.querySelectorAll('.how-to-card, .feature-card').forEach(card => {
+                card.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        // Trigger the same effect as hover
+                        card.style.transform = 'translateY(-10px)';
+                        setTimeout(() => {
+                            card.style.transform = 'translateY(0)';
+                        }, 300);
+                    }
+                });
+            });
+        }
+
+        // Toast notification system
+        function showToast(message, type = 'success') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.setAttribute('role', 'alert');
+            
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+            
+            toast.innerHTML = `
+                <i class="fas ${icon}" aria-hidden="true"></i>
+                <div>${message}</div>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                toast.style.animation = 'slideInRight 0.3s ease reverse';
+                setTimeout(() => {
+                    toastContainer.removeChild(toast);
+                }, 300);
+            }, 5000);
+        }
+    </script>
+
+</body></html>
